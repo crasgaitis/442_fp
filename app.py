@@ -18,7 +18,7 @@ st.markdown(
             filter: hue-rotate(180deg);
         }}
         
-    .stHeader{{
+    [data-testid="stHeader"]{{
         background-color: black
     }}
         
@@ -37,16 +37,22 @@ st.markdown(
         background-color: #17345F
     }}
     
-    [data-testid="stImage"]{{
+    [data-baseweb="popover"]>div>div>ul>div>div>li>div>div>div:hover {{
+        color: black
+    }}
+    
+    .css-1v0mbdj.etr89bj1{{
         display: block;
-        margin: 0 auto;
-        width: 100px;
+        margin: 0 auto;.
+        max-width: 100px;
+        border: red;
         filter: hue-rotate(-180deg)
     }}
     
     [data-testid="stImage"]{{
         margin-left: 0;
         padding: 0;
+        filter: hue-rotate(-180deg)
     }}
     
      </style>
@@ -63,18 +69,17 @@ df = pd.read_csv('survey.csv')
     
 with st.container():
     
-    image = Image.open('mh_icon.png')
+    image = Image.open('head.png')
     st.image(image)
 
     st.header('Mental Health Tech Survey')
     st.write("Insert a byline")
     
-    st.subheader('Worker Demographics')
-    
     country_options = df.Country.unique()
-    
     options = st.multiselect(
-        'Select locations to filter plots for worker and job demographics.', country_options, default=["Canada", "Netherlands"])
+        'Select locations to filter plots for worker demographics and job statistics.', country_options, default=["Canada", "Netherlands"])
+    
+    st.subheader('Worker Demographics')
     
     filtered_df = df[df['Country'].isin(options)]
     
@@ -105,8 +110,10 @@ with st.container():
     ax_age.set_xticks(bin_edges)
 
     st.pyplot(fig)
+    
+    st.markdown('`Surveyed participants were skewed towards a more male population with young and middle aged adults.`')
         
-    st.subheader('Job Demographics')
+    st.subheader('Job Statistics')
     
     counts = filtered_df.groupby(['tech_company', 'remote_work']).size().unstack().fillna(0).stack()
 
@@ -135,7 +142,7 @@ with st.container():
 
     st.pyplot(fig)
     
-    st.markdown('The dataset has a majority of non-remote workers and tech job workers. Remote workers are more likely to have a tech job.')
+    st.markdown('`The dataset has a majority of non-remote workers and tech job workers. Remote workers are more likely to have a tech job.`')
 
     st.write('Sort employee counts and self-employment plots by tech and remote filters:')
     
@@ -194,3 +201,9 @@ with st.container():
     
     else:
         st.text('Please select at least one filter to generate a plot.')
+        
+    st.subheader('Mental Health Analysis')
+    
+    st.subheader('Mental Health Inference')
+    
+    st.subheader('Worker comments')
