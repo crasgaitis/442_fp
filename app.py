@@ -9,6 +9,7 @@ import seaborn as sns
 from collections import Counter
 from wordcloud import WordCloud
 import re
+import nltk
 from nltk.corpus import stopwords
 
 nltk.download('stopwords')
