@@ -6,7 +6,23 @@ import pickle
 import streamlit as st
 from PIL import Image
 import seaborn as sns
+from collections import Counter
+from wordcloud import WordCloud
+import re
+from nltk.corpus import stopwords
 
+stopwords_list = stopwords.words('english')
+
+def get_wordcloud_info(df):
+
+    word_counts = Counter()
+    for message in df['comments'].dropna():
+        message = re.sub(r'[^a-zA-Z\s]', '', str(message))
+        if isinstance(message, str):
+            words = [word.lower() for word in str(message).split() if word.lower() not in stopwords_list]
+            word_counts.update(words)
+        
+    return word_counts
 
 st.markdown(
      f"""
@@ -53,6 +69,14 @@ st.markdown(
         margin-left: 0;
         padding: 0;
         filter: hue-rotate(-180deg)
+    }}
+    
+    .st-f2.st-bc.st-d8.st-f3.st-d2.st-be.st-cq.st-cp.st-f4{{
+        background-color: red !important
+    }}
+    
+    button >.css-1offfwp.e16nr0p34 p{{
+        color: black
     }}
     
      </style>
@@ -204,6 +228,42 @@ with st.container():
         
     st.subheader('Mental Health Analysis')
     
+    image = Image.open('output.png')
+    st.image(image)
+    
+    st.write('Darker blue hues correspond to a stronger negative linear relationship. Darker red hues correspond to a stronger positive linear relationship.')
+    
     st.subheader('Mental Health Inference')
     
     st.subheader('Worker comments')
+    
+    option = st.selectbox(
+    'Filter wordcloud based on available mental health benefits',
+    ('Benefits offered', 'No benefits', 'No filter'))
+    
+    if option == 'No filter':
+        wcloud_sorted_df = df.dropna(subset=['comments'])
+    else:
+        wcloud_sorted_df = df[df['benefits'] == 'Yes'] if option == 'Benefits offered' else df[df['benefits'] == 'No']
+        wcloud_sorted_df = wcloud_sorted_df.dropna(subset=['comments'])
+    wcloud_sorted_df = wcloud_sorted_df.reset_index(drop=True)
+    word_counts = get_wordcloud_info(wcloud_sorted_df)
+    num_records = len(wcloud_sorted_df)
+    # st.write(wcloud_sorted_df.benefits.value_counts())
+    
+    wordcloud = WordCloud(background_color='white', width=1000, height=500).generate_from_frequencies(word_counts).to_image()
+    
+    st.image(wordcloud)
+    st.write("Analyzed " + str(num_records) + " comments.")
+    
+    st.markdown('`Verbage seems consistent for employees regardless of benefits.`')
+        
+    view_comment = st.button('View a sample comment')
+    
+    if view_comment:
+        random_index = np.random.randint(0, len(wcloud_sorted_df))
+        random_comment = wcloud_sorted_df.loc[random_index, 'comments']
+        st.write(str(random_comment))
+
+
+    st.subheader("Write Up")
