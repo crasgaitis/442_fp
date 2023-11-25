@@ -11,6 +11,7 @@ from wordcloud import WordCloud
 import re
 from nltk.corpus import stopwords
 
+nltk.download('stopwords')
 stopwords_list = stopwords.words('english')
 
 def get_wordcloud_info(df):
