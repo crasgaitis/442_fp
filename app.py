@@ -15,6 +15,17 @@ from nltk.corpus import stopwords
 nltk.download('stopwords')
 stopwords_list = stopwords.words('english')
 
+select_dict = {
+    'have anonymity when discussing mental health': 'anonymity',
+    'are offered benefits': 'benefits',
+    'have bosses who are more biased against mental health vs physical health': 'mental_vs_physical',
+    'have a family history of mental health issues': 'family_history',
+    'have care options at work': 'care_options',
+    'have a wellness program at work': 'wellness_program',
+    'feel that asking for help is encouraged': 'seek_help',
+    'have observed negative consequences from reporting mental health problems': 'obs_consequence',
+}
+
 def get_wordcloud_info(df):
 
     word_counts = Counter()
@@ -73,23 +84,22 @@ st.markdown(
         filter: hue-rotate(-180deg)
     }}
     
-    .st-f2.st-bc.st-d8.st-f3.st-d2.st-be.st-cq.st-cp.st-f4{{
-        background-color: red !important
+    div[data-baseweb="select"] > div {{
+        background-color: black;
     }}
     
     button >.css-1offfwp.e16nr0p34 p{{
         color: black
     }}
     
+    .e1fb0mya1.css-bubqsq.ex0cdmw0, e1fb0mya1.css-bubqsq.ex0cdmw0{{
+        fill: red
+    }}
+    
      </style>
      """,
      unsafe_allow_html=True
  )
-
-
-# loading
-# with open("model.pkl", 'rb') as file:
-#     clf = pickle.load(file)
 
 df = pd.read_csv('survey.csv')
     
@@ -102,8 +112,10 @@ with st.container():
     st.write("Insert a byline")
     
     country_options = df.Country.unique()
+    country_options = [country for country in country_options if (df['Country'] == country).sum() > 7]
+
     options = st.multiselect(
-        'Select locations to filter plots for worker demographics and job statistics.', country_options, default=["Canada", "Netherlands"])
+        'Select locations to filter plots for worker demographics and job statistics.', sorted(country_options), default=["Canada", "Netherlands"])
     
     st.subheader('Worker Demographics')
     
@@ -235,7 +247,79 @@ with st.container():
     
     st.write('Darker blue hues correspond to a stronger negative linear relationship. Darker red hues correspond to a stronger positive linear relationship.')
     
+    selectbox_filter = st.selectbox('View workers that', ('are offered benefits', 'have care options at work',
+                                    'have bosses who are more biased against mental health vs physical health', 
+                                    'have a family history of mental health issues', 'have anonymity when discussing mental health',
+                                    'have a wellness program at work', 'feel that asking for help is encouraged',
+                                    'have observed negative consequences from reporting mental health problems',
+                                    ))
+    
+    select_filter = select_dict[selectbox_filter]
+    sorted_labels = df[select_filter].value_counts().index
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+    colors = plt.cm.Set2.colors
+
+    # pie chart
+    ax1.pie(df[select_filter].value_counts()[sorted_labels], labels=sorted_labels, autopct='%1.f%%', startangle=90, colors=colors)
+    ax1.set_title(str(select_filter).capitalize() + ' Distribution')
+
+    # grouped bar chart
+    grouped_data = df.groupby(['treatment', select_filter]).size().unstack()
+    grouped_data = grouped_data[sorted_labels]
+    grouped_data.plot(kind='bar', stacked=False, ax=ax2, legend=False, color=colors)
+    ax2.set_title(str(select_filter).capitalize() + ' vs Treatment   ')
+    ax2.set_xlabel('Treatment')
+    ax2.set_ylabel('Worker Count')
+    ax2.set_xticks([0, 1])
+    ax2.set_xticklabels(['No treatment', 'Getting treatment'], rotation=0)
+
+    ax2.yaxis.tick_right()
+    ax2.yaxis.set_label_position("right")
+    ax2.spines['top'].set_visible(False)
+    ax2.spines['left'].set_visible(False)
+
+    st.pyplot(fig)
+    
     st.subheader('Mental Health Inference')
+    
+    st.write("Predict whether you will seek mental health treatment, with 70\% accuracy.")
+    
+    col4, col5, col6 = st.columns(3)
+    with col4:
+        Gender = st.selectbox('Gender', ('m', 'f', 'other'))
+        employee_size = st.selectbox('Company size (num employees)', options = order_of_ticks)
+
+    with col5:
+        Age = st.number_input('Age', min_value = 15, max_value= 100, value=20)
+        self_employed = st.checkbox('Self Employed?')
+        remote_work = st.checkbox('Remote Work?')
+        
+    with col6:
+        Country = st.selectbox('Country', options = country_options)
+        tech_company = st.checkbox('Tech Company?')
+        benefits = st.checkbox('Benefits?')
+
+    st.write('Click the box if you agree with the statement.')
+    
+    family_history = st.checkbox('My family has a history of mental illness.')
+    care_options = st.checkbox('I know the care options available at my company.')
+    wellness_prog = st.checkbox('My employer offers a wellness program.')
+    seek = st.checkbox('My employer encourages me to seek outside help for mental health.')
+    anon = st.checkbox('My anonymity is protected.')
+    conseq = st.checkbox('I have observed negative consequences for coworkers with mental health conditions.')
+    
+    pred = st.button('Predict')
+    
+    if pred:
+        st.write('Working on this right now')
+    
+    
+    # loading
+    with open("model.pkl", 'rb') as file:
+        clf = pickle.load(file)
+        
+    
     
     st.subheader('Worker comments')
     
