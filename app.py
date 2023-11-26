@@ -122,7 +122,15 @@ with st.container():
     filtered_df = df[df['Country'].isin(options)]
     
     st.write('There are ' + str(len(filtered_df)) + ' surveyed workers in the selected region(s).')
+    
+    col7, col8 = st.columns(2)
+    
+    with col7:
+        st.write('')
+    with col8:
+        kde = st.checkbox('Show KDE (Kernel density estimate) line')
 
+    
     fig, (ax_gender, ax_age) = plt.subplots(1, 2, figsize=(12, 5))
 
     # pie chart for gender distribution
@@ -135,7 +143,7 @@ with st.container():
     ax_gender.axis('equal')
 
     # histogram for age distribution
-    sns.histplot(filtered_df['Age'], bins=10, kde=False, color='skyblue', ax=ax_age)
+    sns.histplot(filtered_df['Age'], bins=range(0, 101, 5), kde=kde, color='lime', ax=ax_age)
     ax_age.set_title('Age Distribution')
     ax_age.set_xlabel('Age')
     ax_age.set_ylabel('Count')
@@ -258,7 +266,7 @@ with st.container():
     sorted_labels = df[select_filter].value_counts().index
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
-    colors = plt.cm.Set2.colors
+    colors = plt.cm.Dark2.colors
 
     # pie chart
     ax1.pie(df[select_filter].value_counts()[sorted_labels], labels=sorted_labels, autopct='%1.f%%', startangle=90, colors=colors)
@@ -283,11 +291,11 @@ with st.container():
     
     st.subheader('Mental Health Inference')
     
-    st.write("Predict whether you will seek mental health treatment, with 70\% accuracy.")
+    st.write("Predict whether you will seek mental health treatment, with over 70\% accuracy.")
     
     col4, col5, col6 = st.columns(3)
     with col4:
-        Gender = st.selectbox('Gender', ('m', 'f', 'other'))
+        Gender = st.selectbox('Gender', ('Male', 'Female', 'Other'))
         employee_size = st.selectbox('Company size (num employees)', options = order_of_ticks)
 
     with col5:
@@ -312,14 +320,40 @@ with st.container():
     pred = st.button('Predict')
     
     if pred:
-        st.write('Working on this right now')
-    
-    
-    # loading
-    with open("model.pkl", 'rb') as file:
-        clf = pickle.load(file)
         
-    
+        country_dict = {
+            'Australia': 0,
+            'Canada': 1,
+            'France': 2,
+            'Germany': 3,
+            'India': 4,
+            'Ireland': 5,
+            'Netherlands': 6,
+            'New Zealand': 7,
+            'United Kingdom': 8,
+            'United States': 9
+        }
+        
+        gender_dict = {'Female': 0, 'Male': 1, 'Other': 2}
+        
+        empsize_dict = {'1-5': 1, '6-25': 2, '26-100': 3, '100-500': 4, '500-1000':5, '1000+':6}
+        
+        input_array = [country_dict[Country], gender_dict[Gender], Age, anon, benefits, empsize_dict[employee_size], family_history, 
+                       care_options, wellness_prog, seek, conseq, remote_work, self_employed, tech_company]
+                
+        input_array = pd.to_numeric(input_array, errors='coerce')
+        
+        # loading model
+        with open("model.pkl", 'rb') as file:
+            clf = pickle.load(file)
+        
+        model_pred = clf.predict([input_array])[0]
+        # st.write(model_pred)
+        
+        if model_pred:
+            st.write('You are likely to seek mental health treatment.')
+        else:
+            st.write('You are unlikely to seek mental health treatment.') 
     
     st.subheader('Worker comments')
     
