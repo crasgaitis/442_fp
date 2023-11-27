@@ -101,7 +101,12 @@ st.markdown(
  )
 
 df = pd.read_csv('survey.csv')
-    
+
+def get_writeup():
+    return """
+<div> insert writeup here </div>
+"""
+
 with st.container():
     
     image = Image.open('head.png')
@@ -386,3 +391,4 @@ with st.container():
 
 
     st.subheader("Write Up")
+    st.write(get_writeup(), unsafe_allow_html=True)
