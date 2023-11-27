@@ -336,7 +336,7 @@ with st.container():
         
         gender_dict = {'Female': 0, 'Male': 1, 'Other': 2}
         
-        empsize_dict = {'1-5': 1, '6-25': 2, '26-100': 3, '100-500': 4, '500-1000':5, '1000+':6}
+        empsize_dict = {'1-5': 1, '6-25': 2, '26-100': 3, '100-500': 4, '500-1000':5, 'More than 1000':6}
         
         input_array = [country_dict[Country], gender_dict[Gender], Age, anon, benefits, empsize_dict[employee_size], family_history, 
                        care_options, wellness_prog, seek, conseq, remote_work, self_employed, tech_company]
