@@ -8,7 +8,7 @@
 python3.10 -m venv env
 source env/bin/activate
 pip install --upgrade pip
-pip install streamlit wordcloud nltk seaborn matplotlib
+pip install streamlit wordcloud nltk seaborn matplotlib scikit-learn
 
 # to run app
 streamlit run app.py
