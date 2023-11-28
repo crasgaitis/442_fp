@@ -26,6 +26,8 @@ select_dict = {
     'have observed negative consequences from reporting mental health problems': 'obs_consequence',
 }
 
+order_of_ticks = ['1-5', '6-25', '26-100', '100-500', '500-1000', 'More than 1000']
+
 def get_wordcloud_info(df):
 
     word_counts = Counter()
@@ -224,7 +226,6 @@ with st.container():
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
 
         # bar chart for 'no_employees'
-        order_of_ticks = ['1-5', '6-25', '26-100', '100-500', '500-1000', 'More than 1000']
         tick_labels = ['1-5', '6-25', '26-100', '100-500', '500-1000', '1000+']
 
         sns.countplot(x='no_employees', data=extra_filtered_df, ax=ax1, palette='viridis', order=order_of_ticks)
