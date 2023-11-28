@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import pickle
-import streamlit as st
 from PIL import Image
 import seaborn as sns
 from collections import Counter
@@ -104,7 +103,12 @@ st.markdown(
  )
 
 df = pd.read_csv('survey.csv')
-    
+
+def get_writeup():
+    return """
+<div> insert writeup here </div>
+"""
+
 with st.container():
     
     image = Image.open('head.png')
@@ -388,3 +392,4 @@ with st.container():
 
 
     st.subheader("Write Up")
+    st.write(get_writeup(), unsafe_allow_html=True)
