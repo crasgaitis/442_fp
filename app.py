@@ -123,6 +123,11 @@ with st.container():
     options = st.multiselect(
         'Select locations to filter plots for worker demographics and job statistics.', sorted(country_options), default=["Canada", "Netherlands"])
     
+    if not options:
+        st.header("You must select at least one Country.")
+        exit()
+
+
     st.subheader('Worker Demographics')
     
     filtered_df = df[df['Country'].isin(options)]
@@ -203,11 +208,11 @@ with st.container():
     with col0:
         tech = st.checkbox('Tech jobs', value=True)
     with col1:
-        no_tech = st.checkbox('No tech jobs')
+        no_tech = st.checkbox('Non-tech jobs')
     with col2:
         remote = st.checkbox('Remote', value=True)
     with col3:
-        no_remote = st.checkbox('No remote')
+        no_remote = st.checkbox('Non-remote')
     
     extra_filtered_df = filtered_df.copy()
     
