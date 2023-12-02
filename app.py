@@ -156,8 +156,8 @@ with st.container():
     # histogram for age distribution
     sns.histplot(filtered_df['Age'], bins=range(0, 101, 5), kde=kde, color='lime', ax=ax_age)
     ax_age.set_title('Age Distribution')
-    ax_age.set_xlabel('Age')
-    ax_age.set_ylabel('Count')
+    ax_age.set_xlabel('Respondent Age')
+    ax_age.set_ylabel('Respondent Count')
     ax_age.set_xlim(0, 100)
     
     ax_age.spines['top'].set_visible(False)
@@ -171,6 +171,7 @@ with st.container():
     st.markdown('`Surveyed participants were skewed towards a more male population with young and middle aged adults.`')
         
     st.subheader('Job Statistics')
+    st.write('The Outer Circle shows what portion of our dataset\'s respondents work remotely, and what portion don\'t work remotely. While the inner circle shows the tech vs non-tech break down of the two groups.')
     
     counts = filtered_df.groupby(['tech_company', 'remote_work']).size().unstack().fillna(0).stack()
 
@@ -201,8 +202,10 @@ with st.container():
     
     st.markdown('`The dataset has a majority of non-remote workers and tech job workers. Remote workers are more likely to have a tech job.`')
 
-    st.write('Sort employee counts and self-employment plots by tech and remote filters:')
+
+    st.subheader('Sort employee counts and self-employment plots by tech and remote filters:')
     
+
     col0, col1, col2, col3 = st.columns(4)
 
     with col0:
@@ -241,7 +244,7 @@ with st.container():
             
         ax1.set_title('Employee Count Distribution')
         ax1.set_xlabel('Number of Employees')
-        ax1.set_ylabel('Count')
+        ax1.set_ylabel('Respondent Count')
         ax1.set_xticklabels(tick_labels)
         
         ax1.spines['top'].set_visible(False)
@@ -257,14 +260,20 @@ with st.container():
     
     else:
         st.text('Please select at least one filter to generate a plot.')
-        
+
+    st.divider()    
+
     st.subheader('Mental Health Analysis')
+    st.write('Static analysis of the entire dataset showing what factors correlate positively and negatively')
     
     image = Image.open('output.png')
     st.image(image)
+
+
     
     st.write('Darker blue hues correspond to a stronger negative linear relationship. Darker red hues correspond to a stronger positive linear relationship.')
     
+    st.divider()
     selectbox_filter = st.selectbox('View workers that', ('are offered benefits', 'have care options at work',
                                     'have bosses who are more biased against mental health vs physical health', 
                                     'have a family history of mental health issues', 'have anonymity when discussing mental health',
