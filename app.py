@@ -115,7 +115,12 @@ with st.container():
     st.image(image)
 
     st.header('Mental Health Tech Survey')
-    st.write("Insert a byline")
+    st.write("Crack the Code of your own well being")
+
+    st.divider()
+
+    st.subheader("Understanding the Biases of the Dataset")
+    st.write('Every dataset has limitations based on a limited sample size. In this first section we hope you can better understand who responded to the survey and how that might affect the final results. The dataset has higher rates of male, tech, non-remote, US-based, aged 25-35, not-self-employed.')
     
     country_options = df.Country.unique()
     country_options = [country for country in country_options if (df['Country'] == country).sum() > 7]
