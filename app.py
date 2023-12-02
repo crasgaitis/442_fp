@@ -117,8 +117,6 @@ with st.container():
     st.header('Mental Health Tech Survey')
     st.write("Crack the Code of your own well being")
 
-    st.divider()
-
     st.subheader("Understanding the Biases of the Dataset")
     st.write('Every dataset has limitations based on a limited sample size. In this first section we hope you can better understand who responded to the survey and how that might affect the final results. The dataset has higher rates of male, tech, non-remote, US-based, aged 25-35, not-self-employed.')
     
@@ -266,7 +264,6 @@ with st.container():
     else:
         st.text('Please select at least one filter to generate a plot.')
 
-    st.divider()    
 
     st.subheader('Mental Health Analysis')
     st.write('Static analysis of the entire dataset showing what factors correlate positively and negatively')
@@ -278,7 +275,6 @@ with st.container():
     
     st.write('Darker blue hues correspond to a stronger negative linear relationship. Darker red hues correspond to a stronger positive linear relationship.')
     
-    st.divider()
     selectbox_filter = st.selectbox('View workers that', ('are offered benefits', 'have care options at work',
                                     'have bosses who are more biased against mental health vs physical health', 
                                     'have a family history of mental health issues', 'have anonymity when discussing mental health',
