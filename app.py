@@ -115,10 +115,10 @@ with st.container():
     st.image(image)
 
     st.header('Mental Health Tech Survey')
-    st.write("Crack the Code of your own well being")
+    st.write("Crack the Code of your own well being with our detailed analysis.")
 
     st.subheader("Understanding the Biases of the Dataset")
-    st.write('Every dataset has limitations based on a limited sample size. In this first section we hope you can better understand who responded to the survey and how that might affect the final results. The dataset has higher rates of male, tech, non-remote, US-based, aged 25-35, not-self-employed.')
+    st.write('Every dataset has limitations based on a limited sample size. In this first section, we hope you can better understand who responded to the survey and how that might affect the final results. The dataset has higher rates of male, tech, non-remote, US-based, aged 25-35, and not-self-employed individuals.')
     
     country_options = df.Country.unique()
     country_options = [country for country in country_options if (df['Country'] == country).sum() > 7]
@@ -174,7 +174,7 @@ with st.container():
     st.markdown('`Surveyed participants were skewed towards a more male population with young and middle aged adults.`')
         
     st.subheader('Job Statistics')
-    st.write('The Outer Circle shows what portion of our dataset\'s respondents work remotely, and what portion don\'t work remotely. While the inner circle shows the tech vs non-tech break down of the two groups.')
+    st.write('The Outer Circle shows what portion of our dataset\'s respondents work remotely, and what portion don\'t work remotely. While the inner circle shows the tech vs non-tech break down of the two groups. Clearly, we can see an uneven distribution between remote and non remote work. Within each group, the distribution of tech and non tech jobs is also imbalanced.')
     
     counts = filtered_df.groupby(['tech_company', 'remote_work']).size().unstack().fillna(0).stack()
 
@@ -208,6 +208,7 @@ with st.container():
 
     st.subheader('Sort employee counts and self-employment plots by tech and remote filters:')
     
+    st.markdown('The relationship between having a tech job, working remote, or being self-employeed is very interesting! For example, you are most likely to work remote if you work in tech and are remote.')
 
     col0, col1, col2, col3 = st.columns(4)
 
@@ -263,10 +264,16 @@ with st.container():
     
     else:
         st.text('Please select at least one filter to generate a plot.')
+        
+    st.markdown("Now that you have a good understanding of who this dataset is looking at and the relationships between background information, let's look at an analysis of mental health for these populations.")
 
 
     st.subheader('Mental Health Analysis')
-    st.write('Static analysis of the entire dataset showing what factors correlate positively and negatively')
+    st.write("Mental health is a multifaceted aspect of well-being influenced by a myriad of factors. It encompasses not only the absence of mental illnesses but also the presence of positive mental states. Biological factors, such as genetics and neurochemistry, play a pivotal role, shaping an individual's susceptibility to mental health conditions. Environmental factors, including early life experiences, trauma, and socio-economic circumstances, contribute significantly to mental health outcomes. Additionally, individual lifestyle choices, such as diet, exercise, and sleep patterns, exert a profound impact. Social support systems, relationships, and the broader cultural context also influence mental health, highlighting the interconnected nature of human experiences. The complexity of mental health underscores the need for a holistic approach that addresses biological, psychological, social, and environmental dimensions, emphasizing the importance of tailored interventions and destigmatizing conversations surrounding mental well-being.")
+
+    st.write("In the plot below, we take a look at environmental factors within the workplace.")
+
+    st.write('Static analysis of the entire dataset showing what factors correlate positively and negatively.')
     
     image = Image.open('output.png')
     st.image(image)
@@ -274,6 +281,8 @@ with st.container():
 
     
     st.write('Darker blue hues correspond to a stronger negative linear relationship. Darker red hues correspond to a stronger positive linear relationship.')
+    
+
     
     selectbox_filter = st.selectbox('View workers that', ('are offered benefits', 'have care options at work',
                                     'have bosses who are more biased against mental health vs physical health', 
@@ -310,6 +319,8 @@ with st.container():
     st.pyplot(fig)
     
     st.subheader('Mental Health Inference')
+    
+    st.write("Our cutting-edge predictive model now offers the capacity to estimate the likelihood of individuals seeking mental health treatment with an impressive accuracy rate exceeding 70%. Leveraging advanced data analytics and machine learning algorithms, these models analyze a myriad of factors such as individual behavioral patterns, historical health data, and contextual information. By examining this comprehensive dataset, these predictive tools can identify subtle patterns and correlations that might elude human observation, providing a valuable tool for early intervention and personalized mental health care. The promise of predicting the inclination towards seeking mental health treatment underscores the potential for a more proactive and targeted approach in addressing mental health challenges, ultimately contributing to improved overall well-being and more effective healthcare strategies. Try it out yourself and see if, based on your personal information and workplace environment, if you're likely to seek treatment!")
     
     st.write("Predict whether you will seek mental health treatment, with over 70\% accuracy.")
     
@@ -376,6 +387,8 @@ with st.container():
             st.write('You are unlikely to seek mental health treatment.') 
     
     st.subheader('Worker comments')
+    
+    st.write('Many workers also have comments about mental health in the workplace too.')
     
     option = st.selectbox(
     'Filter wordcloud based on available mental health benefits',
