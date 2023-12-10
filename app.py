@@ -512,6 +512,8 @@ with st.container():
 
     st.markdown("**Hopefully, you now have a better understanding of the dynamics of mental health in the workplace. The next time you seek out a job, consider if it will bode well for your own well-being. You’re also encouraged to use our machine-learning model to test your likelihood of seeking mental health treatment when applying for your next job! Be sure to always prioritize your health over professional commitments. You got this!**")
 
+    st.markdown("Kaggle. (2016). *Mental Health in Tech Survey.* Open Sourcing Mental Illness, LTD. https://www.kaggle.com/datasets/osmi/mental-health-in-tech-survey.")
+
     # unused
     # st.subheader("Write Up")
     # st.write(get_writeup(), unsafe_allow_html=True)
